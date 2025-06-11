@@ -1,0 +1,13 @@
+
+http://localhost:8080/vuelos/api/v1/swagger-ui/index.html#/
+
+
+TAREAS A REALIZAR:
+- Cambiar el metodo de inyeccion de dependecia a la forma de inyeccion por constructor (hecho)
+- Agregar auditoria sobre los registros de la base de datos (hecho)
+- Agregar variables de entorno
+- Crear una base de datos en memoria
+- Crear diferentes perfiles (hecho)
+- Crear diferentes roles de usuario
+- Agregar seguridad a la aplicacion con Spring Security
+- Documentar la API con Swagger
