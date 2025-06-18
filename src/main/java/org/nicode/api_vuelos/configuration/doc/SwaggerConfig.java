@@ -13,8 +13,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 description = "This API manages flights at an airport",
                 version = "1.0.0",
                 contact = @Contact(
-                        name = "Nicolas Orellano",
-                        email = "nico.orellano@gmail.com"
+                        name = "NicoDev"
+                        //email = "nico.orellano@gmail.com"
                 ),
                 license = @License(
                         name = "Standard Software Use License for NiCode"
