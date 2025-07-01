@@ -15,7 +15,7 @@ public class Airline {
     @Schema(description = "Unique airline identifier", example = "1")
     private Integer id;
 
-    @Schema(description = "Name of the airline")
+    @Schema(description = "Name of the airline", example = "Aerolíneas Argentinas")
     @NotBlank(message = "The name field cannot be blank")
     private String name;
 

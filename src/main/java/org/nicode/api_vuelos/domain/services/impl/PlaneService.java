@@ -44,7 +44,7 @@ public class PlaneService implements IPlaneService {
     }
 
     public void create(Plane planeDto){
-        if (airlineRepository.exist(planeDto.getAirline().getId())){
+        if (planeDto.getAirline().getId() != null && airlineRepository.getById(planeDto.getAirline().getId()).isPresent()) {
             String name = airlineRepository.getById(planeDto.getAirline().getId()).get().getName();
             String country = airlineRepository.getById(planeDto.getAirline().getId()).get().getCountry();
 
@@ -59,7 +59,10 @@ public class PlaneService implements IPlaneService {
             }
         }
         else {
-            throw new AirlineNotFoundException("The airline with ID " + planeDto.getAirline().getId() + " does not exist");
+            if (planeDto.getAirline().getId() == null){
+                throw new AirlineBadRequestException("The airline ID cannot be null");
+            }
+            throw new AirlineNotFoundException("The airline ID not found");
         }
     }
 

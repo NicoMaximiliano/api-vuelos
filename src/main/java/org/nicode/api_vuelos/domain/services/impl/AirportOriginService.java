@@ -27,6 +27,9 @@ public class AirportOriginService implements IAirportOriginService {
     public List<AirportOrigin> getAllByCountry(String country){
         String nameCountry = EndpointConverter.transformEndpoint(country);;
 
+        if (airportRepository.getAllByCountry(country).isEmpty()){
+            throw new AirportNotFoundException("The origin airports not found");
+        }
         return airportRepository.getAllByCountry(nameCountry);
     }
 

@@ -27,6 +27,9 @@ public class AirportDestinyService implements IAirportDestinyService {
     public List<AirportDestiny> getAllByCountry(String country){
         String nameCountry = EndpointConverter.transformEndpoint(country);;
 
+        if (airportRepository.getAllByCountry(country).isEmpty()){
+            throw new AirportNotFoundException("The destination airports not found");
+        }
         return airportRepository.getAllByCountry(nameCountry);
     }
 
