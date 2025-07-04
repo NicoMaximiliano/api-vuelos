@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/airports")
-@Tag(name = "Origin airport", description = "Controller to manage origin airports")
+@Tag(name = "Origin Airport", description = "Controller to manage origin airports")
 @RequiredArgsConstructor
 public class AirportOriginController {
 
@@ -47,14 +47,7 @@ public class AirportOriginController {
             @ApiResponse(
                     responseCode = "204",
                     description = "List of origin airports is empty",
-                    content =  {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = SuccessfulResponse.class)),
-                            @Content(
-                                    mediaType = "application/xml",
-                                    schema = @Schema(implementation = SuccessfulResponse.class))
-                    }
+                    content = @Content
             )
     })
     @GetMapping("/origins/all")
@@ -63,7 +56,7 @@ public class AirportOriginController {
             return new ResponseEntity<>(airportOriginService.getAll(), HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(new SuccessfulResponse("success", "There are no origin airports"), HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -214,7 +207,7 @@ public class AirportOriginController {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
+                    responseCode = "200",
                     description = "Origin airport successfully updated",
                     content =  {
                             @Content(

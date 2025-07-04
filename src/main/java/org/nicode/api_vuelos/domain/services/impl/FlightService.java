@@ -78,7 +78,7 @@ public class FlightService implements IFlightService {
     public boolean validatePlane(Flight flightDto) {
         boolean isValid = false;
 
-        if(planeRepository.exist(flightDto.getPlane().getId())){
+        if(flightDto.getPlane().getId() != null && planeRepository.getById(flightDto.getPlane().getId()).isPresent()) {
             String model = planeRepository.getById(flightDto.getPlane().getId()).get().getModel();
             Integer capacity = planeRepository.getById(flightDto.getPlane().getId()).get().getCapacity();
 
@@ -95,7 +95,10 @@ public class FlightService implements IFlightService {
             }
         }
         else {
-            throw new PlaneNotFoundException("The plane with ID " + flightDto.getPlane().getId() + " does not exist");
+            if (flightDto.getPlane().getId() == null) {
+                throw new PlaneBadRequestException("The plane ID cannot be null");
+            }
+            throw new PlaneNotFoundException("The plane with ID " + flightDto.getPlane().getId() + " was not found");
         }
 
         return isValid && validateAirline(flightDto);
@@ -104,7 +107,7 @@ public class FlightService implements IFlightService {
     public boolean validateAirline(Flight flightDto) {
         boolean isValid = false;
 
-        if (airlineRepository.exist(flightDto.getPlane().getAirline().getId())) {
+        if (flightDto.getPlane().getAirline().getId() != null && airlineRepository.getById(flightDto.getPlane().getAirline().getId()).isPresent()) {
             String name = airlineRepository.getById(flightDto.getPlane().getAirline().getId()).get().getName();
             String country = airlineRepository.getById(flightDto.getPlane().getAirline().getId()).get().getCountry();
 
@@ -118,7 +121,10 @@ public class FlightService implements IFlightService {
                 throw new AirlineBadRequestException("Airline fields cannot be null");
             }
         } else {
-            throw new AirlineNotFoundException("The airline with ID " + flightDto.getPlane().getAirline().getId() + " does not exist");
+            if(flightDto.getPlane().getAirline().getId() == null) {
+                throw new AirlineBadRequestException("The airline ID cannot be null");
+            }
+            throw new AirlineNotFoundException("The airline with ID " + flightDto.getPlane().getAirline().getId() + " was not found");
         }
 
         return isValid;
@@ -127,7 +133,7 @@ public class FlightService implements IFlightService {
     public boolean validateAirportOrigin(Flight flightDto) {
         boolean isValid = false;
 
-        if (originRepository.exist(flightDto.getOrigin().getId())) {
+        if (flightDto.getOrigin().getId() != null && originRepository.getById(flightDto.getOrigin().getId()).isPresent()) {
             String name = originRepository.getById(flightDto.getOrigin().getId()).get().getName();
             String city = originRepository.getById(flightDto.getOrigin().getId()).get().getCity();
             String country = originRepository.getById(flightDto.getOrigin().getId()).get().getCountry();
@@ -145,7 +151,10 @@ public class FlightService implements IFlightService {
             }
         }
         else {
-            throw new AirportNotFoundException("The origin airport with ID " + flightDto.getOrigin().getId() + " does not exist");
+            if(flightDto.getOrigin().getId() == null) {
+                throw new AirportBadRequestException("The origin airport ID cannot be null");
+            }
+            throw new AirportNotFoundException("The origin airport with ID " + flightDto.getOrigin().getId() + " was not found");
         }
 
         return isValid;
@@ -154,7 +163,7 @@ public class FlightService implements IFlightService {
     public boolean validateAirportDestiny(Flight flightDto) {
         boolean isValid = false;
 
-        if (destinyRepository.exist(flightDto.getDestiny().getId())) {
+        if (flightDto.getDestiny().getId() != null && destinyRepository.getById(flightDto.getDestiny().getId()).isPresent()) {
             String name = destinyRepository.getById(flightDto.getDestiny().getId()).get().getName();
             String city = destinyRepository.getById(flightDto.getDestiny().getId()).get().getCity();
             String country = destinyRepository.getById(flightDto.getDestiny().getId()).get().getCountry();
@@ -172,7 +181,10 @@ public class FlightService implements IFlightService {
             }
         }
         else {
-            throw new AirportNotFoundException("The destiny airport with ID " + flightDto.getDestiny().getId() + " does not exist");
+            if (flightDto.getDestiny().getId() == null) {
+                throw new AirportBadRequestException("The destiny airport ID cannot be null");
+            }
+            throw new AirportNotFoundException("The destiny airport with ID " + flightDto.getDestiny().getId() + " was not found");
         }
 
         return isValid;
@@ -190,14 +202,16 @@ public class FlightService implements IFlightService {
 
     public List<Passenger> getAllPassengersById(String id) {
         Optional<Integer> optId = IdConverter.convertToInt(id);
-        List<Passenger> passengersList = new ArrayList<>();
+        List<Passenger> passengers;
 
-        passengerRepository.getAllByFlightId(optId
+        Flight flight = flightRepository.getById(optId
                         .orElseThrow(() -> new FlightBadRequestException("The ID is an incorrect value")))
-                .get()
-                .forEach(passenger -> passengersList.add(passenger));
+                .orElseThrow(() -> new FlightNotFoundException("The flight with ID " + optId.get() + " was not found"));
 
-        return passengersList;
+        passengers = passengerRepository.getAllByFlightId(flight.getId())
+                .get();
+
+        return passengers;
     }
     
 }

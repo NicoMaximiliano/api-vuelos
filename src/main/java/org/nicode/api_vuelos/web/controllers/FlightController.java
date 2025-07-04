@@ -2,6 +2,7 @@ package org.nicode.api_vuelos.web.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,12 +10,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.nicode.api_vuelos.domain.dtos.Flight;
+import org.nicode.api_vuelos.domain.dtos.Passenger;
 import org.nicode.api_vuelos.domain.dtos.responses.SuccessfulResponse;
 import org.nicode.api_vuelos.domain.services.IFlightService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -37,25 +41,25 @@ public class FlightController {
                     content =  {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Flight.class)),
+                                    array = @ArraySchema(schema = @Schema(implementation = Flight.class))),
                             @Content(
                                     mediaType = "application/xml",
-                                    schema = @Schema(implementation = Flight.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = Flight.class)))
                     }
             ),
             @ApiResponse(
                     responseCode = "204",
-                    description = "No flights available",
-                    content = @Content
+                    description = "List of flights is empty",
+                    content =  @Content
             )
     })
     @GetMapping("/all")
     public ResponseEntity<?> getAll(){
-        if (flightService.getAll().isEmpty()){
-            return new ResponseEntity<>(new SuccessfulResponse("success", "No flights available"), HttpStatus.OK);
+        if (!flightService.getAll().isEmpty()){
+            return new ResponseEntity<>(flightService.getAll(), HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(flightService.getAll(), HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -85,7 +89,7 @@ public class FlightController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Flight id not found",
+                    description = "Flight not found",
                     content = @Content
             )
 
@@ -109,11 +113,16 @@ public class FlightController {
                     content =  {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Flight.class)),
+                                    schema = @Schema(implementation = SuccessfulResponse.class)),
                             @Content(
                                     mediaType = "application/xml",
-                                    schema = @Schema(implementation = Flight.class))
+                                    schema = @Schema(implementation = SuccessfulResponse.class))
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The fields cannot be blank",
+                    content = @Content
             )
 
     })
@@ -137,11 +146,21 @@ public class FlightController {
                     content =  {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Flight.class)),
+                                    schema = @Schema(implementation = SuccessfulResponse.class)),
                             @Content(
                                     mediaType = "application/xml",
-                                    schema = @Schema(implementation = Flight.class))
+                                    schema = @Schema(implementation = SuccessfulResponse.class))
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Incorrect flight id request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Flight id not found",
+                    content = @Content
             )
 
     })
@@ -165,10 +184,10 @@ public class FlightController {
                     content =  {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Flight.class)),
+                                    schema = @Schema(implementation = SuccessfulResponse.class)),
                             @Content(
                                     mediaType = "application/xml",
-                                    schema = @Schema(implementation = Flight.class))
+                                    schema = @Schema(implementation = SuccessfulResponse.class))
                     }
             ),
             @ApiResponse(
@@ -201,11 +220,16 @@ public class FlightController {
                     content =  {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Flight.class)),
+                                    array = @ArraySchema(schema = @Schema(implementation = Passenger.class))),
                             @Content(
                                     mediaType = "application/xml",
-                                    schema = @Schema(implementation = Flight.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = Passenger.class)))
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "List of passengers is empty",
+                    content = @Content
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -221,11 +245,13 @@ public class FlightController {
     })
     @GetMapping("/{id}/all-passengers")
     public ResponseEntity<?> getAllPassengers(@Parameter(description = "The flight id being requested", required = true) @PathVariable("id") String id){
-        if (flightService.getAllPassengersById(id).isEmpty()){
-            return new ResponseEntity<>(new SuccessfulResponse("success", "No passengers available for flight with ID " + id), HttpStatus.OK);
+        List<Passenger> passengers = flightService.getAllPassengersById(id);
+
+        if (!passengers.isEmpty()){
+            return new ResponseEntity<>(flightService.getAllPassengersById(id), HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(flightService.getAllPassengersById(id), HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 

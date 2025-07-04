@@ -48,14 +48,7 @@ public class AirlineController {
             @ApiResponse(
                     responseCode = "204",
                     description = "List of airlines is empty",
-                    content =  {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = SuccessfulResponse.class)),
-                            @Content(
-                                    mediaType = "application/xml",
-                                    schema = @Schema(implementation = SuccessfulResponse.class))
-                    }
+                    content = @Content
             )
     })
     @GetMapping("/all")
@@ -64,7 +57,7 @@ public class AirlineController {
             return new ResponseEntity<>(airlineService.getAll(), HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(new SuccessfulResponse("success", "No airlines available"), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -175,7 +168,7 @@ public class AirlineController {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
+                    responseCode = "200",
                     description = "Airline successfully updated",
                     content =  {
                             @Content(

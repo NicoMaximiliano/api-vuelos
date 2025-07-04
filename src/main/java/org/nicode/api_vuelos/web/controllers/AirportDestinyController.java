@@ -47,14 +47,7 @@ public class AirportDestinyController {
             @ApiResponse(
                     responseCode = "204",
                     description = "List of destination airports is empty",
-                    content =  {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = SuccessfulResponse.class)),
-                            @Content(
-                                    mediaType = "application/xml",
-                                    schema = @Schema(implementation = SuccessfulResponse.class))
-                    }
+                    content = @Content
             )
     })
     @GetMapping("/destinies/all")
@@ -63,7 +56,7 @@ public class AirportDestinyController {
             return new ResponseEntity<>(airportDestinyService.getAll(), HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(new SuccessfulResponse("success", "There are no destination airports"), HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -216,7 +209,7 @@ public class AirportDestinyController {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
+                    responseCode = "200",
                     description = "Destination airport successfully updated",
                     content =  {
                             @Content(

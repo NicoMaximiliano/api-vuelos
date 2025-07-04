@@ -2,6 +2,7 @@ package org.nicode.api_vuelos.web.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,24 +38,25 @@ public class PassengerController {
                     content =  {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Passenger.class)),
+                                    array = @ArraySchema(schema = @Schema(implementation = Passenger.class))),
                             @Content(
                                     mediaType = "application/xml",
-                                    schema = @Schema(implementation = Passenger.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = Passenger.class)))
                     }
             ),
             @ApiResponse(
                     responseCode = "204",
-                    description = "No passengers available",
+                    description = "List of passengers is empty",
                     content = @Content
             )
     })
     @GetMapping("/all")
     public ResponseEntity<?> getAll(){
-        if (passengerService.getAll().isEmpty()){
-            return new ResponseEntity<>(new SuccessfulResponse("succes", "No passengers available"), HttpStatus.OK);
-        } else {
+        if (!passengerService.getAll().isEmpty()){
             return new ResponseEntity<>(passengerService.getAll(), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -85,7 +87,7 @@ public class PassengerController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Passenger id not found",
+                    description = "Passenger not found",
                     content = @Content
             )
 
@@ -116,27 +118,12 @@ public class PassengerController {
                     }
             ),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "Incorrect passenger first name request",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Incorrect passenger last name request",
-                    content = @Content
-            ),
-            @ApiResponse(
                     responseCode = "404",
-                    description = "Passenger first name not found",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Passenger last name not found",
+                    description = "Passenger not found",
                     content = @Content
             )
     })
-    @GetMapping(params = {"firstname","lastname"})
+    @GetMapping("/fullname")
     public ResponseEntity<?> getByFullName(@Parameter(description = "The passenger firstname being requested", required = true) @RequestParam("firstname") String firstName, @Parameter(description = "The passenger lastname being requested", required = true) @RequestParam("lastname") String lastName){
         return new ResponseEntity<>(passengerService.getByFullName(firstName, lastName), HttpStatus.OK);
     }
@@ -162,18 +149,13 @@ public class PassengerController {
                     }
             ),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "Incorrect passenger passport request",
-                    content = @Content
-            ),
-            @ApiResponse(
                     responseCode = "404",
-                    description = "Passenger passport not found",
+                    description = "Passenger not found",
                     content = @Content
             )
 
     })
-    @GetMapping(params = "passport")
+    @GetMapping("/passport")
     public ResponseEntity<?> getByPassport(@Parameter(description = "The passenger passport being requested", required = true) @RequestParam("passport") String passport){
         return new ResponseEntity<>(passengerService.getByPassport(passport), HttpStatus.OK);
     }
@@ -192,11 +174,16 @@ public class PassengerController {
                     content =  {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Passenger.class)),
+                                    schema = @Schema(implementation = SuccessfulResponse.class)),
                             @Content(
                                     mediaType = "application/xml",
-                                    schema = @Schema(implementation = Passenger.class))
+                                    schema = @Schema(implementation = SuccessfulResponse.class))
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The fields cannot be blank",
+                    content = @Content
             )
 
     })
@@ -214,16 +201,26 @@ public class PassengerController {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
+                    responseCode = "200",
                     description = "Passenger successfully updated",
                     content =  {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Passenger.class)),
+                                    schema = @Schema(implementation = SuccessfulResponse.class)),
                             @Content(
                                     mediaType = "application/xml",
-                                    schema = @Schema(implementation = Passenger.class))
+                                    schema = @Schema(implementation = SuccessfulResponse.class))
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Incorrect passenger id request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Passenger id not found",
+                    content = @Content
             )
 
     })
@@ -247,10 +244,10 @@ public class PassengerController {
                     content =  {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Passenger.class)),
+                                    schema = @Schema(implementation = SuccessfulResponse.class)),
                             @Content(
                                     mediaType = "application/xml",
-                                    schema = @Schema(implementation = Passenger.class))
+                                    schema = @Schema(implementation = SuccessfulResponse.class))
                     }
             ),
             @ApiResponse(

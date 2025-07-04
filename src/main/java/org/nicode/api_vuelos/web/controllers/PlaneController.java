@@ -47,14 +47,7 @@ public class PlaneController {
             @ApiResponse(
                     responseCode = "204",
                     description = "List of planes is empty",
-                    content =  {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = SuccessfulResponse.class)),
-                            @Content(
-                                    mediaType = "application/xml",
-                                    schema = @Schema(implementation = SuccessfulResponse.class))
-                    }
+                    content = @Content
             )
     })
     @GetMapping("/all")
@@ -63,7 +56,7 @@ public class PlaneController {
             return new ResponseEntity<>(planeService.getAll(), HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(new SuccessfulResponse("success", "There are no planes"), HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -94,7 +87,7 @@ public class PlaneController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Plane id not found",
+                    description = "Plane not found",
                     content = @Content
             )
 
@@ -125,7 +118,7 @@ public class PlaneController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Plane model not found",
+                    description = "Plane not found",
                     content = @Content
             )
 
@@ -176,7 +169,7 @@ public class PlaneController {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
+                    responseCode = "200",
                     description = "Plane successfully updated",
                     content =  {
                             @Content(
@@ -227,11 +220,13 @@ public class PlaneController {
             @ApiResponse(
                     responseCode = "400",
                     description = "Incorrect plane id request",
-                    content = @Content),
+                    content = @Content
+            ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Plane id not found",
-                    content = @Content)
+                    content = @Content
+            )
 
     })
     @DeleteMapping("/delete/{id}")

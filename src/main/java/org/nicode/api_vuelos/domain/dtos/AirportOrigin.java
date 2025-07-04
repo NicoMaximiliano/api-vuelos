@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Representation of a origin airport")
 public class AirportOrigin {
 
     @Schema(description = "Unique origin airport identifier", example = "1")

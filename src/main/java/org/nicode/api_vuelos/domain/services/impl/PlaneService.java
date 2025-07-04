@@ -40,7 +40,7 @@ public class PlaneService implements IPlaneService {
         String nameModel = EndpointConverter.transformEndpoint(model);
 
         return planeRepository.getByModel(nameModel)
-                .orElseThrow(() -> new PlaneNotFoundException("The plane " + nameModel + " was not found"));
+                .orElseThrow(() -> new PlaneNotFoundException("The plane " + nameModel.toUpperCase() + " was not found"));
     }
 
     public void create(Plane planeDto){

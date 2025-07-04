@@ -2,6 +2,8 @@ package org.nicode.api_vuelos.domain.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.nicode.api_vuelos.domain.dtos.Passenger;
+import org.nicode.api_vuelos.domain.exceptions.flight_exception.FlightBadRequestException;
+import org.nicode.api_vuelos.domain.exceptions.flight_exception.FlightNotFoundException;
 import org.nicode.api_vuelos.domain.exceptions.passenger_exception.PassengerBadRequestException;
 import org.nicode.api_vuelos.domain.exceptions.passenger_exception.PassengerNotFoundException;
 import org.nicode.api_vuelos.domain.services.IPassengerService;
@@ -36,12 +38,12 @@ public class PassengerService implements IPassengerService {
 
     public Passenger getByFullName(String firstName, String lastName){
         return passengerRepository.getByFullName(firstName, lastName)
-                .orElseThrow(() -> new PassengerNotFoundException("The passenger with name  " + firstName + " " + lastName + " was not found"));
+                .orElseThrow(() -> new PassengerNotFoundException("The passenger with name " + firstName.toUpperCase() + " " + lastName.toUpperCase() + " was not found"));
     }
 
     public Passenger getByPassport(String passport){
         return passengerRepository.getByPassport(passport)
-                .orElseThrow(() -> new PassengerNotFoundException("The passenger with passport " + passport + " was not found"));
+                .orElseThrow(() -> new PassengerNotFoundException("The passenger with passport " + passport.toUpperCase() + " was not found"));
     }
 
     public void create(Passenger passengerDto){
@@ -56,7 +58,7 @@ public class PassengerService implements IPassengerService {
     public boolean validateFlight(Passenger passengerDto) {
         boolean isValid = false;
 
-        if (flightRepository.exist(passengerDto.getFlight().getId())){
+        if (passengerDto.getFlight().getId() != null && flightRepository.getById(passengerDto.getFlight().getId()).isPresent()) {
             Float price = flightRepository.getById(passengerDto.getFlight().getId()).get().getPrice();
             LocalDateTime departure = flightRepository.getById(passengerDto.getFlight().getId()).get().getStart();
             LocalDateTime arrival = flightRepository.getById(passengerDto.getFlight().getId()).get().getFinish();
@@ -65,14 +67,17 @@ public class PassengerService implements IPassengerService {
                 if (passengerDto.getFlight().getPrice().equals(price) && passengerDto.getFlight().getStart().equals(departure) && passengerDto.getFlight().getFinish().equals(arrival)) {
                     isValid = true;
                 } else {
-                    throw new PassengerBadRequestException("The flight fields do not match the provided price, start or finish time.");
+                    throw new FlightBadRequestException("The flight fields do not match the provided price, start or finish time.");
                 }
             } else {
-                throw new PassengerBadRequestException("The flight fields cannot be null.");
+                throw new FlightBadRequestException("The flight fields cannot be null.");
             }
         }
         else {
-            throw new PassengerBadRequestException("The flight with ID " + passengerDto.getFlight().getId() + " does not exist.");
+            if (passengerDto.getFlight().getId() == null) {
+                throw new FlightBadRequestException("The flight ID cannot be null.");
+            }
+            throw new FlightNotFoundException("The flight ID not found");
         }
 
         return isValid;

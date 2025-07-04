@@ -36,7 +36,7 @@ public class AirlineService implements IAirlineService {
         String nameAirline = EndpointConverter.transformEndpoint(name);
 
         return airlineRepository.getByName(nameAirline)
-                .orElseThrow(() -> new AirlineNotFoundException("The airline " + nameAirline + " was not found"));
+                .orElseThrow(() -> new AirlineNotFoundException("The airline " + nameAirline.toUpperCase() + " was not found"));
     }
 
     public void create(Airline airlineDto){

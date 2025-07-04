@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Representation of a plane")
 public class Plane {
 
     @Schema(description = "Unique plane identifier", example = "1")
@@ -23,7 +24,6 @@ public class Plane {
     @NotNull(message = "The capacity field cannot be null")
     private Integer capacity;
 
-    //@Schema(description = "Airline that operates the plane", example = "Aerolíneas Argentinas")
     @NotNull(message = "The Airline field cannot be null")
     private Airline airline;
 

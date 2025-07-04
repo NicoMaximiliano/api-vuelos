@@ -45,7 +45,7 @@ public class AirportDestinyService implements IAirportDestinyService {
         String nameAirport = EndpointConverter.transformEndpoint(name);
 
         return airportRepository.getByName(nameAirport)
-                .orElseThrow(()-> new AirportNotFoundException("The airport " + nameAirport + " was not found"));
+                .orElseThrow(()-> new AirportNotFoundException("The airport " + nameAirport.toUpperCase() + " was not found"));
     }
 
     public void create(AirportDestiny airportDto){
