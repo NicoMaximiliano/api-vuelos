@@ -210,7 +210,7 @@ FLIGHT (vuelo)
 
 
 ## Estructura de la base de datos (en edicion)
-![Estructura de la Base de Datos](Api_Vuelos/src/main/resources/img/estructura_bd.jpg)
+![Estructura de la Base de Datos](/src/main/resources/img/estructura_bd.jpg)
 
 ## Pasos a seguir
 - Agregar seguridad sobre los endpoint creando diferentes roles para su manipulacion con Spring Security
