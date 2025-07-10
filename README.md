@@ -209,7 +209,7 @@ FLIGHT (vuelo)
 | DELETE     | /flights/delete/1        | Elimina un vuelo por su ID      |
 
 
-## Estructura de la base de datos (en edicion)
+## Estructura de la base de datos
 ![Estructura de la Base de Datos](/src/main/resources/img/estructura_bd.jpg)
 
 ## Pasos a seguir
