@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -245,7 +246,7 @@ public class FlightController {
     })
     @GetMapping("/{id}/all-passengers")
     public ResponseEntity<?> getAllPassengers(@Parameter(description = "The flight id being requested", required = true) @PathVariable("id") String id){
-        List<Passenger> passengers = flightService.getAllPassengersById(id);
+        List<Map<String, Object>> passengers = flightService.getAllPassengersById(id);
 
         if (!passengers.isEmpty()){
             return new ResponseEntity<>(flightService.getAllPassengersById(id), HttpStatus.OK);

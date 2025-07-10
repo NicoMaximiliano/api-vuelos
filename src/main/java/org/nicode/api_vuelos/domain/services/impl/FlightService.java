@@ -2,7 +2,6 @@ package org.nicode.api_vuelos.domain.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.nicode.api_vuelos.domain.dtos.Flight;
-import org.nicode.api_vuelos.domain.dtos.Passenger;
 import org.nicode.api_vuelos.domain.exceptions.airline_exception.AirlineBadRequestException;
 import org.nicode.api_vuelos.domain.exceptions.airline_exception.AirlineNotFoundException;
 import org.nicode.api_vuelos.domain.exceptions.airport_exception.AirportBadRequestException;
@@ -200,18 +199,42 @@ public class FlightService implements IFlightService {
         flightRepository.delete(flightToDelete.getId());
     }
 
-    public List<Passenger> getAllPassengersById(String id) {
+//    public List<Passenger> getAllPassengersById(String id) {
+//        Optional<Integer> optId = IdConverter.convertToInt(id);
+//        List<Passenger> passengers;
+//
+//        Flight flight = flightRepository.getById(optId
+//                        .orElseThrow(() -> new FlightBadRequestException("The ID is an incorrect value")))
+//                .orElseThrow(() -> new FlightNotFoundException("The flight with ID " + optId.get() + " was not found"));
+//
+//        passengers = passengerRepository.getAllByFlightId(flight.getId())
+//                .get();
+//
+//        return passengers;
+//    }
+
+    public List<Map<String, Object>> getAllPassengersById(String id) {
         Optional<Integer> optId = IdConverter.convertToInt(id);
-        List<Passenger> passengers;
+        List<Map<String, Object>> passengers = new ArrayList<>();
 
         Flight flight = flightRepository.getById(optId
                         .orElseThrow(() -> new FlightBadRequestException("The ID is an incorrect value")))
                 .orElseThrow(() -> new FlightNotFoundException("The flight with ID " + optId.get() + " was not found"));
 
-        passengers = passengerRepository.getAllByFlightId(flight.getId())
-                .get();
+
+        passengerRepository.getAllByFlightId(flight.getId())
+                .get()
+                .forEach(passenger -> {
+                    Map<String, Object> passengerMap = new LinkedHashMap<>();
+                    passengerMap.put("id", passenger.getId());
+                    passengerMap.put("name", passenger.getName());
+                    passengerMap.put("lastName", passenger.getLastName());
+                    passengerMap.put("passport", passenger.getPassport());
+                    passengers.add(passengerMap);
+                });
 
         return passengers;
     }
-    
+
+
 }

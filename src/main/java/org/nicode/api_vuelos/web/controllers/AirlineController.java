@@ -27,7 +27,7 @@ public class AirlineController {
     private final IAirlineService airlineService;
 
 
-    /* --------------------------------------------------------- */
+
     @Operation(
             summary = "Get all airlines",
             description = "Show all available airlines"
@@ -62,7 +62,7 @@ public class AirlineController {
     }
 
 
-    /* --------------------------------------------------------- */
+
     @Operation(
             summary = "Get airline by id",
             description = "Show an available airline through its id"
@@ -98,7 +98,7 @@ public class AirlineController {
     }
 
 
-    /* --------------------------------------------------------- */
+
     @Operation(
             summary = "Get airline by name",
             description = "Show an available airline through its name"
@@ -129,7 +129,7 @@ public class AirlineController {
     }
 
 
-    /* --------------------------------------------------------- */
+
     @Operation(
             summary = "Create a new airline",
             description = "Create and save a new airline"
@@ -161,7 +161,7 @@ public class AirlineController {
     }
 
 
-    /* --------------------------------------------------------- */
+
     @Operation(
             summary = "Update a airline",
             description = "Update and save an existing airline"
@@ -198,7 +198,7 @@ public class AirlineController {
     }
 
 
-    /* --------------------------------------------------------- */
+
     @Operation(
             summary = "Remove airlines by id",
             description = "Delete an airline through its id"

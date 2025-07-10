@@ -13,7 +13,9 @@ import org.nicode.api_vuelos.util.converters.IdConverter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -24,8 +26,25 @@ public class PassengerService implements IPassengerService {
     private final IFlightRepository flightRepository;
 
 
-    public List<Passenger> getAll(){
-        return passengerRepository.getAll();
+//    public List<Passenger> getAll(){
+//        return passengerRepository.getAll();
+//    }
+
+    public List<Map<String, Object>> getAll(){
+        List<Map<String, Object>> passengers = new ArrayList<>();
+        passengerRepository.getAll()
+                .forEach(passenger -> {
+                    Map<String, Object> passengerMap = Map.of(
+                            "id", passenger.getId(),
+                            "name", passenger.getName(),
+                            "lastName", passenger.getLastName(),
+                            "passport", passenger.getPassport(),
+                            "nationality", passenger.getNationality()
+                    );
+                    passengers.add(passengerMap);
+                });
+
+        return passengers;
     }
 
     public Passenger getById(String id){
