@@ -21,7 +21,6 @@ Esta es una API REST que gestiona los vuelos de un aeropuerto teniedo en cuenta 
 - Mapeador para la conversion de DTOs a entities, y viceversa
 
 ## Tecnologias
-
 Las tecnologias principales que se usaron para el proyecto fueron:
 
 - Java 17 - lenguaje de programacion
@@ -210,7 +209,8 @@ FLIGHT (vuelo)
 | DELETE     | /flights/delete/1        | Elimina un vuelo por su ID      |
 
 
-## Estructura de la base de datos (en edicion)
+## Estructura de la base de datos
+![Estructura de la Base de Datos](/src/main/resources/img/estructura_bd.jpg)
 
 ## Pasos a seguir
 - Agregar seguridad sobre los endpoint creando diferentes roles para su manipulacion con Spring Security
